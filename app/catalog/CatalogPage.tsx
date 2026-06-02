@@ -9,8 +9,7 @@ import { catalog, getUnitsByVolume } from "@/lib/content/catalog";
 import { loadProgress } from "@/lib/progress/store";
 import type { VolumeId } from "@/types/content";
 
-export function CatalogPage() {
-  const [volumeId, setVolumeId] = useState<VolumeId>("g1a");
+export function CatalogPage({ volumeId }: { volumeId: VolumeId }) {
   const [completedByLesson, setCompletedByLesson] = useState<Record<string, number>>({});
 
   useEffect(() => {
@@ -36,10 +35,10 @@ export function CatalogPage() {
           {catalog.volumes.map((volume) => (
             <BigButton
               key={volume.id}
-              onClick={() => setVolumeId(volume.id)}
+              href={`/catalog?volume=${volume.id}`}
               icon={BookOpen}
               variant={volumeId === volume.id ? "leaf" : "white"}
-              ariaLabel={`切换到${volume.title}`}
+              ariaLabel={`打开${volume.title}`}
             >
               {volume.title}
             </BigButton>
