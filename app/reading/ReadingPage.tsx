@@ -6,7 +6,7 @@ import { BigButton } from "@/components/ui/BigButton";
 import { KidCard } from "@/components/ui/KidCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { allLessons } from "@/lib/content/catalog";
-import { getProgress, saveImportedLessonText } from "@/lib/progress/store";
+import { loadProgress, saveImportedLessonText } from "@/lib/progress/store";
 import type { ExerciseTemplate } from "@/types/content";
 import type { ImportedLessonText } from "@/types/progress";
 
@@ -29,9 +29,11 @@ export function ReadingPage() {
     } satisfies ExerciseTemplate);
 
   useEffect(() => {
-    const imported = getProgress().importedLessonTexts.find((item) => item.lessonId === lesson.id);
-    setSavedText(imported);
-    setLocalText(imported?.body ?? "");
+    void loadProgress().then((progress) => {
+      const imported = progress.importedLessonTexts.find((item) => item.lessonId === lesson.id);
+      setSavedText(imported);
+      setLocalText(imported?.body ?? "");
+    });
   }, [lesson.id]);
 
   function saveText() {

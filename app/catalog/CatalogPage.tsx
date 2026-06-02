@@ -6,7 +6,7 @@ import { UnitMap } from "@/components/lesson/UnitMap";
 import { BigButton } from "@/components/ui/BigButton";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { catalog, getUnitsByVolume } from "@/lib/content/catalog";
-import { getProgress } from "@/lib/progress/store";
+import { loadProgress } from "@/lib/progress/store";
 import type { VolumeId } from "@/types/content";
 
 export function CatalogPage() {
@@ -14,15 +14,16 @@ export function CatalogPage() {
   const [completedByLesson, setCompletedByLesson] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const progress = getProgress();
-    const grouped = progress.exerciseRecords.reduce<Record<string, Set<string>>>((acc, record) => {
-      acc[record.lessonId] ??= new Set();
-      acc[record.lessonId].add(record.exerciseId);
-      return acc;
-    }, {});
-    setCompletedByLesson(
-      Object.fromEntries(Object.entries(grouped).map(([lessonId, ids]) => [lessonId, ids.size]))
-    );
+    void loadProgress().then((progress) => {
+      const grouped = progress.exerciseRecords.reduce<Record<string, Set<string>>>((acc, record) => {
+        acc[record.lessonId] ??= new Set();
+        acc[record.lessonId].add(record.exerciseId);
+        return acc;
+      }, {});
+      setCompletedByLesson(
+        Object.fromEntries(Object.entries(grouped).map(([lessonId, ids]) => [lessonId, ids.size]))
+      );
+    });
   }, []);
 
   const units = useMemo(() => getUnitsByVolume(volumeId), [volumeId]);

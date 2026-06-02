@@ -4,14 +4,14 @@ import { useRef, useState } from "react";
 import { Download, RotateCcw, Upload } from "lucide-react";
 import { BigButton } from "@/components/ui/BigButton";
 import { KidCard } from "@/components/ui/KidCard";
-import { exportProgress, importProgress, resetProgress } from "@/lib/progress/store";
+import { exportProgressAsync, importProgressAsync, resetProgressAsync } from "@/lib/progress/store";
 
 export function LocalDataImportExport({ onChanged }: { onChanged?: () => void }) {
   const [text, setText] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
 
-  function download() {
-    const json = exportProgress();
+  async function download() {
+    const json = await exportProgressAsync();
     setText(json);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -25,14 +25,14 @@ export function LocalDataImportExport({ onChanged }: { onChanged?: () => void })
   async function handleFile(file?: File) {
     if (!file) return;
     const json = await file.text();
-    importProgress(json);
+    await importProgressAsync(json);
     setText(json);
     onChanged?.();
   }
 
-  function importText() {
+  async function importText() {
     if (!text.trim()) return;
-    importProgress(text);
+    await importProgressAsync(text);
     onChanged?.();
   }
 
@@ -51,9 +51,10 @@ export function LocalDataImportExport({ onChanged }: { onChanged?: () => void })
         </BigButton>
         <BigButton
           onClick={() => {
-            resetProgress();
-            setText("");
-            onChanged?.();
+            void resetProgressAsync().then(() => {
+              setText("");
+              onChanged?.();
+            });
           }}
           icon={RotateCcw}
           variant="sun"

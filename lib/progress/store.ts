@@ -11,52 +11,52 @@ import type {
   WritingRecord
 } from "@/types/progress";
 import { createNewReviewRecord, nextStatusAfterAnswer } from "@/lib/review/scheduler";
+import { createDefaultProgress, normalizeProgress } from "@/lib/progress/defaults";
 
 const STORAGE_KEY = "xiaohe-yuwen-progress-v1";
-
-const defaultSettings: LearnerSettings = {
-  nickname: "小朋友",
-  dailyGoalMinutes: 15,
-  soundEnabled: true
-};
-
-export function createDefaultProgress(): ProgressState {
-  return {
-    version: 1,
-    settings: defaultSettings,
-    exerciseRecords: [],
-    characterReviews: {},
-    readingRecords: [],
-    writingRecords: [],
-    oralRecords: [],
-    importedLessonTexts: []
-  };
-}
+const SERVER_PROGRESS_ENDPOINT = "/api/progress";
 
 function canUseLocalStorage() {
   return typeof window !== "undefined" && Boolean(window.localStorage);
 }
 
 let memoryProgress: ProgressState = createDefaultProgress();
+let serverStorageAvailable: boolean | undefined;
+let loadPromise: Promise<ProgressState> | null = null;
 
-function normalizeProgress(value: Partial<ProgressState> | null | undefined): ProgressState {
-  return {
-    ...createDefaultProgress(),
-    ...value,
-    settings: {
-      ...defaultSettings,
-      ...(value?.settings ?? {})
-    },
-    exerciseRecords: value?.exerciseRecords ?? [],
-    characterReviews: value?.characterReviews ?? {},
-    readingRecords: value?.readingRecords ?? [],
-    writingRecords: value?.writingRecords ?? [],
-    oralRecords: value?.oralRecords ?? [],
-    importedLessonTexts: value?.importedLessonTexts ?? []
-  };
+function canUseServerStorage() {
+  return typeof window !== "undefined" && typeof window.fetch === "function" && process.env.NODE_ENV !== "test";
 }
 
-export function getProgress(): ProgressState {
+async function fetchServerProgress() {
+  const response = await fetch(SERVER_PROGRESS_ENDPOINT, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Progress server returned ${response.status}`);
+  }
+  return normalizeProgress((await response.json()) as Partial<ProgressState>);
+}
+
+async function writeServerProgress(progress: ProgressState) {
+  const response = await fetch(SERVER_PROGRESS_ENDPOINT, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(progress)
+  });
+  if (!response.ok) {
+    throw new Error(`Progress server returned ${response.status}`);
+  }
+  return normalizeProgress((await response.json()) as Partial<ProgressState>);
+}
+
+function saveLocalProgress(progress: ProgressState) {
+  if (!canUseLocalStorage()) {
+    memoryProgress = progress;
+    return;
+  }
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+}
+
+function getLocalProgress() {
   if (!canUseLocalStorage()) {
     return memoryProgress;
   }
@@ -73,14 +73,64 @@ export function getProgress(): ProgressState {
   }
 }
 
-export function saveProgress(progress: ProgressState) {
-  const normalized = normalizeProgress(progress);
-  if (!canUseLocalStorage()) {
-    memoryProgress = normalized;
-    return normalized;
+function clearLocalProgress() {
+  if (canUseLocalStorage()) {
+    window.localStorage.removeItem(STORAGE_KEY);
+  }
+}
+
+async function persistProgress(progress: ProgressState) {
+  if (!canUseServerStorage() || serverStorageAvailable === false) {
+    saveLocalProgress(progress);
+    return progress;
   }
 
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+  try {
+    const saved = await writeServerProgress(progress);
+    serverStorageAvailable = true;
+    memoryProgress = saved;
+    clearLocalProgress();
+    return saved;
+  } catch {
+    serverStorageAvailable = false;
+    saveLocalProgress(progress);
+    return progress;
+  }
+}
+
+export async function loadProgress(): Promise<ProgressState> {
+  if (!canUseServerStorage()) {
+    memoryProgress = getLocalProgress();
+    return memoryProgress;
+  }
+
+  loadPromise ??= fetchServerProgress()
+    .then((progress) => {
+      serverStorageAvailable = true;
+      memoryProgress = progress;
+      clearLocalProgress();
+      return progress;
+    })
+    .catch(() => {
+      serverStorageAvailable = false;
+      memoryProgress = getLocalProgress();
+      return memoryProgress;
+    })
+    .finally(() => {
+      loadPromise = null;
+    });
+
+  return loadPromise;
+}
+
+export function getProgress(): ProgressState {
+  return serverStorageAvailable ? memoryProgress : getLocalProgress();
+}
+
+export function saveProgress(progress: ProgressState) {
+  const normalized = normalizeProgress(progress);
+  memoryProgress = normalized;
+  void persistProgress(normalized);
   return normalized;
 }
 
@@ -154,16 +204,49 @@ export function exportProgress() {
   return JSON.stringify(getProgress(), null, 2);
 }
 
+export async function exportProgressAsync() {
+  return JSON.stringify(await loadProgress(), null, 2);
+}
+
 export function importProgress(json: string) {
   const parsed = JSON.parse(json) as Partial<ProgressState>;
   return saveProgress(normalizeProgress(parsed));
 }
 
+export async function importProgressAsync(json: string) {
+  const parsed = JSON.parse(json) as Partial<ProgressState>;
+  const normalized = normalizeProgress(parsed);
+  memoryProgress = normalized;
+  await persistProgress(normalized);
+  return normalized;
+}
+
 export function resetProgress() {
   const empty = createDefaultProgress();
-  if (canUseLocalStorage()) {
-    window.localStorage.removeItem(STORAGE_KEY);
-  }
+  clearLocalProgress();
   memoryProgress = empty;
+  void persistProgress(empty);
+  return empty;
+}
+
+export async function resetProgressAsync() {
+  const empty = createDefaultProgress();
+  clearLocalProgress();
+  memoryProgress = empty;
+
+  if (canUseServerStorage() && serverStorageAvailable !== false) {
+    try {
+      const response = await fetch(SERVER_PROGRESS_ENDPOINT, { method: "DELETE" });
+      if (response.ok) {
+        serverStorageAvailable = true;
+        memoryProgress = normalizeProgress((await response.json()) as Partial<ProgressState>);
+        return memoryProgress;
+      }
+    } catch {
+      serverStorageAvailable = false;
+    }
+  }
+
+  saveLocalProgress(empty);
   return empty;
 }

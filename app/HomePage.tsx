@@ -19,7 +19,7 @@ import { SectionTitle } from "@/components/ui/SectionTitle";
 import { ReviewQueue } from "@/components/parent/ReviewQueue";
 import { allLessons, getFirstLessonId, getLessonById, getNextLessonId } from "@/lib/content/catalog";
 import { buildTodayPlan } from "@/lib/review/scheduler";
-import { getProgress } from "@/lib/progress/store";
+import { getProgress, loadProgress } from "@/lib/progress/store";
 import type { ProgressState } from "@/types/progress";
 
 const entries = [
@@ -37,7 +37,7 @@ export function HomePage() {
   const [progress, setProgress] = useState<ProgressState>();
 
   useEffect(() => {
-    setProgress(getProgress());
+    void loadProgress().then(setProgress);
   }, []);
 
   const currentLessonId = progress?.currentLessonId ?? getFirstLessonId();

@@ -5,7 +5,7 @@ import { Volume2, VolumeX } from "lucide-react";
 import { BigButton } from "@/components/ui/BigButton";
 import { KidCard } from "@/components/ui/KidCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
-import { getProgress, updateSettings } from "@/lib/progress/store";
+import { loadProgress, updateSettings } from "@/lib/progress/store";
 import type { LearnerSettings } from "@/types/progress";
 
 export function SettingsPage() {
@@ -17,7 +17,7 @@ export function SettingsPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
-    setSettings(getProgress().settings);
+    void loadProgress().then((progress) => setSettings(progress.settings));
   }, []);
 
   function save(next = settings) {

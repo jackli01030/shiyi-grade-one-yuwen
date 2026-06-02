@@ -3,14 +3,14 @@
 import { useEffect, useState } from "react";
 import { BigButton } from "@/components/ui/BigButton";
 import { KidCard } from "@/components/ui/KidCard";
-import { getProgress, updateCharacterReview } from "@/lib/progress/store";
+import { loadProgress, updateCharacterReview } from "@/lib/progress/store";
 import { pickReviewChars } from "@/lib/review/scheduler";
 
 export function ReviewQueue({ compact = false }: { compact?: boolean }) {
   const [chars, setChars] = useState<string[]>([]);
 
   useEffect(() => {
-    setChars(pickReviewChars(getProgress(), compact ? 3 : 12));
+    void loadProgress().then((progress) => setChars(pickReviewChars(progress, compact ? 3 : 12)));
   }, [compact]);
 
   function answer(char: string, correct: boolean) {

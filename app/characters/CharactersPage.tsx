@@ -6,7 +6,7 @@ import { BigButton } from "@/components/ui/BigButton";
 import { KidCard } from "@/components/ui/KidCard";
 import { SectionTitle } from "@/components/ui/SectionTitle";
 import { allCharacters, allLessons, catalog, getUnitsByVolume } from "@/lib/content/catalog";
-import { getProgress, updateCharacterReview } from "@/lib/progress/store";
+import { loadProgress, updateCharacterReview } from "@/lib/progress/store";
 import type { VolumeId } from "@/types/content";
 import type { ProgressState } from "@/types/progress";
 
@@ -16,7 +16,7 @@ export function CharactersPage() {
   const [progress, setProgress] = useState<ProgressState>();
 
   useEffect(() => {
-    setProgress(getProgress());
+    void loadProgress().then(setProgress);
   }, []);
 
   const units = getUnitsByVolume(volumeId);

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CalendarDays, Mic, PencilLine, Sprout } from "lucide-react";
 import { KidCard } from "@/components/ui/KidCard";
 import type { ProgressState } from "@/types/progress";
-import { getProgress } from "@/lib/progress/store";
+import { loadProgress } from "@/lib/progress/store";
 import { todayKey } from "@/lib/utils/cn";
 
 function lastNDays(days: number) {
@@ -19,7 +19,7 @@ export function ParentDashboard({ refreshKey = 0 }: { refreshKey?: number }) {
   const [progress, setProgress] = useState<ProgressState>();
 
   useEffect(() => {
-    setProgress(getProgress());
+    void loadProgress().then(setProgress);
   }, [refreshKey]);
 
   const stats = useMemo(() => {

@@ -6,7 +6,7 @@ import { TaskList } from "@/components/lesson/TaskList";
 import { ExerciseRenderer } from "@/components/exercise/ExerciseRenderer";
 import { KidCard } from "@/components/ui/KidCard";
 import type { ExerciseTemplate, Lesson } from "@/types/content";
-import { getProgress } from "@/lib/progress/store";
+import { loadProgress } from "@/lib/progress/store";
 
 export function LessonPageClient({ lesson }: { lesson: Lesson }) {
   const [selected, setSelected] = useState<ExerciseTemplate>(lesson.exerciseTemplates[0]);
@@ -14,12 +14,13 @@ export function LessonPageClient({ lesson }: { lesson: Lesson }) {
   const [doneMessage, setDoneMessage] = useState("");
 
   useEffect(() => {
-    const progress = getProgress();
-    setCompletedIds(
-      Array.from(
-        new Set(progress.exerciseRecords.filter((record) => record.lessonId === lesson.id).map((record) => record.exerciseId))
-      )
-    );
+    void loadProgress().then((progress) => {
+      setCompletedIds(
+        Array.from(
+          new Set(progress.exerciseRecords.filter((record) => record.lessonId === lesson.id).map((record) => record.exerciseId))
+        )
+      );
+    });
   }, [lesson.id]);
 
   const sections = useMemo(

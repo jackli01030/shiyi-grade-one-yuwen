@@ -27,6 +27,28 @@ npm run dev
 http://localhost:3000
 ```
 
+## iPad 局域网访问
+
+如果笔记本和 iPad 在同一个 Wi-Fi，可以让笔记本作为本地服务器：
+
+```bash
+npm run dev -- --hostname 0.0.0.0
+```
+
+查看笔记本局域网 IP：
+
+```bash
+ipconfig getifaddr en0
+```
+
+然后在 iPad 浏览器打开：
+
+```text
+http://你的笔记本IP:3000
+```
+
+学习进度会优先写入笔记本服务器的 `data/progress.json`。这个文件不会提交到 GitHub；如果服务器不可用，前端才会退回浏览器本地保存。
+
 ## 检查
 
 ```bash
