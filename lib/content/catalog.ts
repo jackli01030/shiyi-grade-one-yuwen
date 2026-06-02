@@ -581,6 +581,31 @@ const rainComing = readingLesson("g1b", "g1b-u6", "13 要下雨了", "13-yao-xia
 
 const gudong = readingLesson("g1b", "g1b-u8", "19 咕咚", "19-gu-dong", {
   words: ["咕咚", "兔子", "野牛", "大家"],
+  recognitionChars: [
+    charItem("咕", "gu", ["咕咚"], { radical: "口", structure: "左右" }),
+    charItem("咚", "dong", ["咕咚"], { radical: "口", structure: "左右" }),
+    charItem("熟", "shu", ["成熟", "木瓜熟"], { radical: "灬", structure: "上下" }),
+    charItem("掉", "diao", ["掉下"], { radical: "扌", structure: "左右" }),
+    charItem("湖", "hu", ["湖里"], { radical: "氵", structure: "左中右" }),
+    charItem("吓", "xia", ["吓人"], { radical: "口", structure: "左右", isWriting: true }),
+    charItem("啦", "la", ["好啦"], { radical: "口", structure: "左中右" }),
+    charItem("鹿", "lu", ["小鹿"], { structure: "半包围" }),
+    charItem("象", "xiang", ["大象"], { structure: "独体", isWriting: true }),
+    charItem("野", "ye", ["野牛"], { radical: "里", structure: "左右" }),
+    charItem("拦", "lan", ["拦住"], { radical: "扌", structure: "左右" }),
+    charItem("哪", "na", ["哪里"], { radical: "口", structure: "左中右" }),
+    charItem("那", "na", ["那边"], { radical: "阝", structure: "左右", isWriting: true }),
+    charItem("领", "ling", ["带领"], { radical: "页", structure: "左右" })
+  ],
+  writingChars: [
+    charItem("吓", "xia", ["吓人"], { radical: "口", structure: "左右", isWriting: true }),
+    charItem("怕", "pa", ["害怕"], { radical: "忄", structure: "左右", isWriting: true }),
+    charItem("跟", "gen", ["跟着"], { radical: "足", structure: "左右", isWriting: true }),
+    charItem("家", "jia", ["大家"], { radical: "宀", structure: "上下", isWriting: true }),
+    charItem("羊", "yang", ["山羊"], { structure: "独体", isWriting: true }),
+    charItem("象", "xiang", ["大象"], { structure: "独体", isWriting: true }),
+    charItem("都", "dou", ["大家都"], { radical: "阝", structure: "左右", isWriting: true })
+  ],
   exerciseTemplates: [
     {
       id: "gudong-why",
@@ -875,9 +900,60 @@ const units: Unit[] = [
     title: "第八单元 阅读",
     type: "阅读",
     lessons: [
-      readingLesson("g1b", "g1b-u8", "18 棉花姑娘", "18-mian-hua-gu-niang"),
+      readingLesson("g1b", "g1b-u8", "18 棉花姑娘", "18-mian-hua-gu-niang", {
+        words: ["棉花", "姑娘", "医生", "七星瓢虫"],
+        recognitionChars: [
+          charItem("棉", "mian", ["棉花"], { radical: "木", structure: "左右" }),
+          charItem("娘", "niang", ["姑娘"], { radical: "女", structure: "左右" }),
+          charItem("治", "zhi", ["治病"], { radical: "氵", structure: "左右" }),
+          charItem("燕", "yan", ["燕子"], { radical: "灬", structure: "上中下" }),
+          charItem("别", "bie", ["别人"], { radical: "刂", structure: "左右", isWriting: true }),
+          charItem("干", "gan", ["树干"], { structure: "独体", isWriting: true }),
+          charItem("然", "ran", ["然后"], { radical: "灬", structure: "上下" }),
+          charItem("奇", "qi", ["奇怪"], { structure: "上下", isWriting: true }),
+          charItem("颗", "ke", ["一颗"], { radical: "页", structure: "左右" }),
+          charItem("瓢", "piao", ["瓢虫"], { radical: "瓜", structure: "左右" }),
+          charItem("碧", "bi", ["碧绿"], { radical: "石", structure: "上下" }),
+          charItem("吐", "tu", ["吐出"], { radical: "口", structure: "左右" }),
+          charItem("啦", "la", ["好啦"], { radical: "口", structure: "左中右" })
+        ],
+        writingChars: [
+          charItem("病", "bing", ["生病"], { radical: "疒", structure: "半包围", isWriting: true }),
+          charItem("医", "yi", ["医生"], { radical: "匚", structure: "半包围", isWriting: true }),
+          charItem("别", "bie", ["别人"], { radical: "刂", structure: "左右", isWriting: true }),
+          charItem("干", "gan", ["树干"], { structure: "独体", isWriting: true }),
+          charItem("奇", "qi", ["奇怪"], { structure: "上下", isWriting: true }),
+          charItem("七", "qi", ["七星"], { structure: "独体", isWriting: true }),
+          charItem("星", "xing", ["七星"], { radical: "日", structure: "上下", isWriting: true })
+        ]
+      }),
       gudong,
-      readingLesson("g1b", "g1b-u8", "20 小壁虎借尾巴", "20-xiao-bi-hu-jie-wei-ba"),
+      readingLesson("g1b", "g1b-u8", "20 小壁虎借尾巴", "20-xiao-bi-hu-jie-wei-ba", {
+        words: ["小壁虎", "尾巴", "小鱼", "燕子"],
+        recognitionChars: [
+          charItem("壁", "bi", ["壁虎"], { radical: "土", structure: "上下" }),
+          charItem("墙", "qiang", ["墙角"], { radical: "土", structure: "左右" }),
+          charItem("蚊", "wen", ["蚊子"], { radical: "虫", structure: "左右" }),
+          charItem("咬", "yao", ["咬住"], { radical: "口", structure: "左右" }),
+          charItem("断", "duan", ["挣断"], { radical: "斤", structure: "左右" }),
+          charItem("您", "nin", ["您好"], { radical: "心", structure: "上下", isWriting: true }),
+          charItem("拨", "bo", ["拨水"], { radical: "扌", structure: "左右" }),
+          charItem("甩", "shuai", ["甩尾巴"], { structure: "独体" }),
+          charItem("赶", "gan", ["赶走"], { radical: "走", structure: "半包围" }),
+          charItem("房", "fang", ["房子"], { radical: "户", structure: "半包围", isWriting: true }),
+          charItem("傻", "sha", ["傻孩子"], { radical: "亻", structure: "左右" }),
+          charItem("转", "zhuan", ["转身"], { radical: "车", structure: "左右" })
+        ],
+        writingChars: [
+          charItem("捉", "zhuo", ["捉虫"], { radical: "扌", structure: "左右", isWriting: true }),
+          charItem("条", "tiao", ["一条"], { radical: "木", structure: "上下", isWriting: true }),
+          charItem("爬", "pa", ["爬行"], { radical: "爪", structure: "半包围", isWriting: true }),
+          charItem("姐", "jie", ["姐姐"], { radical: "女", structure: "左右", isWriting: true }),
+          charItem("您", "nin", ["您好"], { radical: "心", structure: "上下", isWriting: true }),
+          charItem("草", "cao", ["草地"], { radical: "艹", structure: "上下", isWriting: true }),
+          charItem("房", "fang", ["房子"], { radical: "户", structure: "半包围", isWriting: true })
+        ]
+      }),
       garden8
     ]
   }

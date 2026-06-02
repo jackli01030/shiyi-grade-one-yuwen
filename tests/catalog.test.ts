@@ -13,4 +13,10 @@ describe("catalog", () => {
     expect(getLessonById("g1b-u1-3-xiao-qing-wa")?.exerciseTemplates.some((item) => item.type === "fill-blank")).toBe(true);
     expect(getLessonById("g1b-u7-15-yi-fen-zhong")?.exerciseTemplates.some((item) => item.type === "timer-task")).toBe(true);
   });
+
+  it("contains recognition and writing characters for lower volume unit 8 reading lessons", () => {
+    const lesson = getLessonById("g1b-u8-19-gu-dong");
+    expect(lesson?.recognitionChars.length).toBeGreaterThan(0);
+    expect(lesson?.writingChars.length).toBeGreaterThan(0);
+  });
 });
