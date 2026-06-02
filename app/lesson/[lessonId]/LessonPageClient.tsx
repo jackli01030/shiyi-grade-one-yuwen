@@ -7,6 +7,7 @@ import { ExerciseRenderer } from "@/components/exercise/ExerciseRenderer";
 import { KidCard } from "@/components/ui/KidCard";
 import type { ExerciseTemplate, Lesson } from "@/types/content";
 import { loadProgress } from "@/lib/progress/store";
+import { lessonPracticeItems, lessonRecognitionItems, lessonWritingItems } from "@/lib/content/lessonSections";
 
 export function LessonPageClient({ lesson }: { lesson: Lesson }) {
   const [selected, setSelected] = useState<ExerciseTemplate>(lesson.exerciseTemplates[0]);
@@ -26,9 +27,9 @@ export function LessonPageClient({ lesson }: { lesson: Lesson }) {
   const sections = useMemo(
     () => [
       { title: "今天学什么", items: lesson.goals },
-      { title: "我会认", items: lesson.recognitionChars.map((item) => `${item.char} ${item.pinyin}`) },
-      { title: "我会写", items: lesson.writingChars.map((item) => `${item.char} ${item.pinyin}`) },
-      { title: "我来练", items: lesson.exerciseTemplates.map((item) => item.title) }
+      { title: "我会认", items: lessonRecognitionItems(lesson) },
+      { title: "我会写", items: lessonWritingItems(lesson) },
+      { title: "我来练", items: lessonPracticeItems(lesson) }
     ],
     [lesson]
   );
@@ -42,7 +43,7 @@ export function LessonPageClient({ lesson }: { lesson: Lesson }) {
             <h2 className="text-lg font-black">{section.title}</h2>
             {section.items.length ? (
               <div className="mt-3 flex flex-wrap gap-2">
-                {section.items.slice(0, 8).map((item) => (
+                {section.items.map((item) => (
                   <span key={item} className="rounded-lg bg-paper px-3 py-2 text-sm font-bold text-ink/70">
                     {item}
                   </span>

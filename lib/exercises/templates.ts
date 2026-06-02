@@ -98,11 +98,25 @@ export function createOralTasks(lesson: Pick<Lesson, "id" | "oralTask">): Exerci
 }
 
 export function createDefaultTasks(lesson: Lesson): ExerciseTemplate[] {
-  return [
+  const tasks = [
     ...createRecognitionTasks(lesson),
     ...createPinyinTasks(lesson),
     ...createReadingTasks(lesson),
     ...createWritingTasks(lesson),
     ...createOralTasks(lesson)
   ].slice(0, 6);
+
+  if (tasks.length > 0) {
+    return tasks;
+  }
+
+  return [
+    {
+      id: `${lesson.id}-parent-check`,
+      type: "parent-child-read",
+      title: "亲子确认",
+      prompt: "和家长说一说今天学到的一件事。",
+      hints: ["声音自然", "不着急", "说完给自己一颗星"]
+    }
+  ];
 }
