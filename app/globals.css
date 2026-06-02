@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #fffdf7;
+  color: #263238;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: #fffdf7;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(255, 240, 184, 0.42), transparent 26rem),
+    radial-gradient(circle at 88% 4%, rgba(216, 237, 244, 0.5), transparent 24rem),
+    linear-gradient(180deg, #fffdf7 0%, #f3faf2 100%);
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #84bfd4;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.tianzige {
+  background-image:
+    linear-gradient(#e7a2a2 1px, transparent 1px),
+    linear-gradient(90deg, #e7a2a2 1px, transparent 1px),
+    linear-gradient(45deg, transparent 49.5%, #e7a2a2 50%, transparent 50.5%),
+    linear-gradient(-45deg, transparent 49.5%, #e7a2a2 50%, transparent 50.5%);
+  background-size: 50% 50%, 50% 50%, 100% 100%, 100% 100%;
+}
