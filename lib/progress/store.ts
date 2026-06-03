@@ -15,6 +15,7 @@ import { createDefaultProgress, normalizeProgress } from "@/lib/progress/default
 
 const STORAGE_KEY = "xiaohe-yuwen-progress-v1";
 const SERVER_PROGRESS_ENDPOINT = "/api/progress";
+const SERVER_PROGRESS_DISABLED = process.env.NEXT_PUBLIC_DISABLE_SERVER_PROGRESS === "true";
 
 function canUseLocalStorage() {
   return typeof window !== "undefined" && Boolean(window.localStorage);
@@ -25,7 +26,12 @@ let serverStorageAvailable: boolean | undefined;
 let loadPromise: Promise<ProgressState> | null = null;
 
 function canUseServerStorage() {
-  return typeof window !== "undefined" && typeof window.fetch === "function" && process.env.NODE_ENV !== "test";
+  return (
+    !SERVER_PROGRESS_DISABLED &&
+    typeof window !== "undefined" &&
+    typeof window.fetch === "function" &&
+    process.env.NODE_ENV !== "test"
+  );
 }
 
 async function fetchServerProgress() {

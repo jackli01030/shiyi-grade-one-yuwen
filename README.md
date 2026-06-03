@@ -57,6 +57,20 @@ npm run typecheck
 npm run build
 ```
 
+## GitHub Pages 部署
+
+推送到 `main` 分支后，GitHub Actions 会自动运行测试、类型检查和静态构建，并发布到 GitHub Pages。
+
+首次使用时，在 GitHub 仓库的 `Settings` -> `Pages` 中，将 `Build and deployment` 的 `Source` 设为 `GitHub Actions`。部署完成后访问：
+
+```text
+https://jackli01030.github.io/shiyi-grade-one-yuwen/
+```
+
+GitHub Pages 是静态站点，不提供 `/api/progress` 服务。线上学习进度会保存在浏览器本地；本地开发服务器仍可使用 `data/progress.json`。
+
+工作流发布时会在 GitHub Actions 的临时构建目录里移除 `app/api`，只导出静态页面，不会改动仓库源码。
+
 ## 内容说明
 
 内置内容只包含课程目录、学习目标、生字、词语和练习模板，不硬编码教材 PDF、教材插图或整篇课文原文。完整课文内容可由家长在阅读页本地导入，导入内容只保存在浏览器 localStorage。
@@ -67,3 +81,7 @@ npm run build
 - 录音只用于本机回放
 - 不上传儿童姓名、录音或学习记录
 - 不包含后端数据库和云端账号系统
+
+## 许可证
+
+本项目采用 MIT License，详见 [LICENSE](./LICENSE)。

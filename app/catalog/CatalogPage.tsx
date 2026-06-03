@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { BookOpen } from "lucide-react";
 import { UnitMap } from "@/components/lesson/UnitMap";
 import { BigButton } from "@/components/ui/BigButton";
@@ -9,8 +10,10 @@ import { catalog, getUnitsByVolume } from "@/lib/content/catalog";
 import { loadProgress } from "@/lib/progress/store";
 import type { VolumeId } from "@/types/content";
 
-export function CatalogPage({ volumeId }: { volumeId: VolumeId }) {
+export function CatalogPage() {
   const [completedByLesson, setCompletedByLesson] = useState<Record<string, number>>({});
+  const searchParams = useSearchParams();
+  const volumeId: VolumeId = searchParams.get("volume") === "g1b" ? "g1b" : "g1a";
 
   useEffect(() => {
     void loadProgress().then((progress) => {
