@@ -1,7 +1,27 @@
 {
   "name": "xiaohe-yuwen",
   "version": "0.1.0",
+  "description": "面向中国大陆一年级小学生的人教版语文 2024 版同步互动学习网站。",
   "private": true,
+  "license": "MIT",
+  "homepage": "https://jackli01030.github.io/shiyi-grade-one-yuwen/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jackli01030/shiyi-grade-one-yuwen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jackli01030/shiyi-grade-one-yuwen/issues"
+  },
+  "keywords": [
+    "grade-one",
+    "chinese",
+    "yuwen",
+    "renjiao",
+    "education",
+    "nextjs",
+    "privacy-first",
+    "kids-learning"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
